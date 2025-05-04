@@ -17,16 +17,8 @@ class SmallGroupEntity extends Model
     protected $keyType = 'string';
 
     protected $fillable = [
-
-        // TODO: rethink how changing of status works?
-        // will a soft deleted small group be enough indication?
-        // Deletion process involve transferring of members
-        // and should be done before it get's deleted
-        //'status', 
         'description',
         'life_stage_id',
-        // 'leader_id',
-        // 'managing_user_id',
         'schedule_day_of_week',
         'schedule_time_of_day',
         'schedule_frequency',
@@ -35,8 +27,6 @@ class SmallGroupEntity extends Model
     protected $casts = [
         'id' => 'string',
         'life_stage_id' => 'integer',
-        // 'leader_id' => 'string',
-        // 'managing_user_id' => 'string',
         'created_ticks_since_epoch' => 'integer',
         'schedule_time_of_day' => 'datetime:H:i:s',
         'schedule_day_of_week' => DayOfWeekEnum::class,

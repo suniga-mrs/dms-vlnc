@@ -10,16 +10,16 @@ class SmallGroupRepository implements SmallGroupRepositoryInterface
     public function save(string $id, array $data): SmallGroupEntity
     {
         if (!blank($id)) {
-            $person = SmallGroupEntity::findOrFail($id);
-            $person->update($data);
-            return $person;
+            $entity = SmallGroupEntity::findOrFail($id);
+            $entity->update($data);
+            return $entity;
         }
         return SmallGroupEntity::create($data);
     }
 
     public function delete(string $id): bool
     {
-        $person = SmallGroupEntity::findOrFail($id);
-        return $person->delete();
+        $entity = SmallGroupEntity::findOrFail($id);
+        return $entity->delete();
     }
 }

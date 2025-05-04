@@ -12,7 +12,7 @@ class PersonEntity extends Model
     use HasFactory, HasUuids;
 
     // Specify custom table name if not plural of model
-    protected $table = 'Persons';
+    protected $table = 'persons';
 
     // Use UUIDs
     protected $keyType = 'string';

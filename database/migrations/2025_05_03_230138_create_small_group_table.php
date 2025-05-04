@@ -20,12 +20,12 @@ return new class extends Migration
             $table->softDeletes(); // ← adds `deleted_at` column
             
             // Foreign key constraint (optional but recommended)
-            $table->foreign('life_stage_id')->references('id')->on('life_stage')->onDelete('set null');
+            $table->foreign('life_stage_id')->references('id')->on('life_stages')->onDelete('set null');
         });
     }
     
     public function down(): void
     {
-        Schema::dropIfExists('small_group');
+        Schema::dropIfExists('small_groups');
     }
 };

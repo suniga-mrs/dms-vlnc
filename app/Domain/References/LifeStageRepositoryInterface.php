@@ -4,6 +4,6 @@ namespace App\Domain\References;
 
 interface LifeStageRepositoryInterface
 {
-    public function save(string $id, array $data): LifeStageEntity;
-    public function delete(string $id): bool;
+    public function save(?int $id, array $data): LifeStageEntity;
+    public function delete(int $id): bool;
 }

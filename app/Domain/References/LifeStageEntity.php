@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
 
 class LifeStageEntity extends Model
 {
-    protected $table = 'life_stage';
+    protected $table = 'life_stages';
     protected $primaryKey = 'id';
     public $incrementing = true;
     protected $keyType = 'integer';
