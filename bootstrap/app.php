@@ -3,12 +3,12 @@
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
-use Illuminate\Http\Middleware\AddLinkHeadersForPreloadedAssets;
+use App\Application\Providers\EventServiceProvider;
 
 $app = Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
-        api:        __DIR__.'/../src/ConnectApp.Web/Routes/api.php',
-        commands:   __DIR__.'/../src/ConnectApp.Web/Routes/console.php',
+        api:        __DIR__.'/../src/Web/Routes/api.php',
+        commands:   __DIR__.'/../src/Web/Routes/console.php',
         health:     '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
@@ -20,13 +20,10 @@ $app = Application::configure(basePath: dirname(__DIR__))
 
 // Override the default config path
 $app->useConfigPath(
-    __DIR__ . '/../src/ConnectApp.Application/Config'
-);
+    __DIR__ . '/../src/Application/Config'
+);    
 
-// Override the bootstrap (cache) path
-$app->useBootstrapPath(
-    __DIR__ . '/../src/ConnectApp.Application/Bootstrap'
-);
-    
+// Register event provider
+$app->register(EventServiceProvider::class);
 
 return $app;

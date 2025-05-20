@@ -28,12 +28,13 @@
     "autoload": {
         "psr-4": {
             "App\\": "app/",
-            "App\\Domain\\": "src/ConnectApp.Domain/",
-            "App\\Infrastructure\\": "src/ConnectApp.Infrastructure/",
-            "App\\Application\\": "src/ConnectApp.Application/",
-            "App\\Web\\": "src/ConnectApp.Web/",
-            "Database\\Factories\\": "src/ConnectApp.Infrastructure/Database/Factories/",
-            "Database\\Seeders\\": "src/ConnectApp.Infrastructure/Database/Seeders/"
+            "App\\Domain\\": "src/Domain/",
+            "App\\Infrastructure\\": "src/Infrastructure/",
+            "App\\Application\\": "src/Application/",
+            "App\\Web\\": "src/Web/",
+            "Database\\Factories\\": "src/Infrastructure/Database/Factories/",
+            "Database\\Seeders\\": "src/Infrastructure/Database/Seeders/",
+            "Database\\Migrations\\": "src/Infrastructure/Database/Migrations/"
         }
     },
     "autoload-dev": {
