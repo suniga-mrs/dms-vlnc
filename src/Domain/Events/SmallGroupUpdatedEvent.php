@@ -2,11 +2,11 @@
 
 namespace App\Domain\Events;
 
-use Illuminate\Support\Str;
-
-class SmallGroupCreatedEvent extends SmallGroupSaveAbstract
+class SmallGroupUpdatedEvent extends SmallGroupSaveAbstract
 {
+
     public function __construct(
+        string      $id,
         string      $description,
         ?int        $lifeStageId,
         int         $scheduleDayOfWeek,
@@ -15,7 +15,7 @@ class SmallGroupCreatedEvent extends SmallGroupSaveAbstract
         ?string     $createdById = null
     ) {
         parent::__construct(
-            (string) Str::uuid(), 
+            $id, 
             $description, 
             $lifeStageId, 
             $scheduleDayOfWeek, 

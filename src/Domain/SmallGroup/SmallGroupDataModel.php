@@ -4,7 +4,7 @@ namespace App\Domain\SmallGroup;
 
 use App\Domain\Enums\DayOfWeekEnum;
 use App\Domain\Enums\ScheduleFrequencyEnum;
-use App\Domain\Events\SmallGroupCreatedEvent;
+use App\Domain\Events\SmallGroupSaveAbstract;
 use \DateTimeImmutable;
 use \DateTimeInterface;
 
@@ -19,7 +19,7 @@ class SmallGroupDataModel
         public ScheduleFrequencyEnum $scheduleFrequency
     ) {}
 
-    public static function fromCreatedEvent(SmallGroupCreatedEvent $event): self
+    public static function fromSaveEvent(SmallGroupSaveAbstract $event): self
     {
         return new self(
             $event->getEntityId(),
