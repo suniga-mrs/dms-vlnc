@@ -4,6 +4,7 @@ namespace App\Domain\Events;
 
 use App\Domain\Shared\DomainEventBase;
 use App\Domain\SmallGroup\SmallGroupEntity;
+use App\Domain\Enums\ScheduleFrequencyEnum;
 
 abstract class SmallGroupSaveAbstract extends DomainEventBase
 {
@@ -12,7 +13,7 @@ abstract class SmallGroupSaveAbstract extends DomainEventBase
     readonly public ?int $lifeStageId;
     readonly public int $scheduleDayOfWeek;
     readonly public string $scheduleTimeOfDay;
-    readonly public string $scheduleFrequency;
+    readonly public ScheduleFrequencyEnum $scheduleFrequency;
 
     public function __construct(
         string $id,
@@ -20,7 +21,7 @@ abstract class SmallGroupSaveAbstract extends DomainEventBase
         ?int $lifeStageId,
         int $scheduleDayOfWeek,
         string $scheduleTimeOfDay,
-        string $scheduleFrequency,
+        ScheduleFrequencyEnum $scheduleFrequency,
         ?string $createdById = null
     ) {
         parent::__construct($id, class_basename(SmallGroupEntity::class), $createdById);

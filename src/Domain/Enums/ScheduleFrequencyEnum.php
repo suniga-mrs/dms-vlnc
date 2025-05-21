@@ -2,11 +2,11 @@
 
 namespace App\Domain\Enums;
 
-enum ScheduleFrequencyEnum: int
+enum ScheduleFrequencyEnum: string
 {
-    case Weekly = 1;
-    case Fortnightly = 2;
-    case Monthly = 3;
+    case Weekly = 'weekly';
+    case Fortnightly = 'fortnightly';
+    case Monthly = 'monthly';
 
     public function label(): string
     {
@@ -15,5 +15,16 @@ enum ScheduleFrequencyEnum: int
             self::Fortnightly => 'Fortnightly',
             self::Monthly => 'Monthly',
         };
+    }
+
+    public static function fromLabel(string $label): ?self
+    {
+        $normalized = strtolower($label);
+        foreach (self::cases() as $case) {
+            if (strtolower($case->label()) === $normalized) {
+                return $case;
+            }
+        }
+        return null; 
     }
 }

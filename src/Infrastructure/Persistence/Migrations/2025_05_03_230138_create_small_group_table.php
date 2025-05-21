@@ -3,7 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
-use Illuminate\Support\Facades\DB;
+use App\Domain\Enums\ScheduleFrequencyEnum;
 
 return new class extends Migration
 {
@@ -15,7 +15,8 @@ return new class extends Migration
             $table->unsignedBigInteger('life_stage_id')->nullable();
             $table->unsignedTinyInteger('schedule_day_of_week')->nullable();
             $table->time('schedule_time_of_day')->nullable();
-            $table->unsignedTinyInteger('schedule_frequency')->nullable();
+            $table->string('schedule_frequency')->nullable()
+                ->checkIn(array_map(fn($case) => "'{$case->value}'", ScheduleFrequencyEnum::cases()));
             $table->timestamps();
             $table->softDeletes(); // ← adds `deleted_at` column
             
