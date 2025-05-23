@@ -6,10 +6,11 @@ use App\Domain\Enums\DayOfWeekEnum;
 use App\Domain\Enums\ScheduleFrequencyEnum;
 use App\Domain\Events\SmallGroupSaveAbstract;
 use App\Domain\SmallGroup\SmallGroupEntity;
+use App\Domain\Shared\BaseDataModel;
 use \DateTimeImmutable;
 use \DateTimeInterface;
 
-class SmallGroupDataModel
+class SmallGroupDataModel extends BaseDataModel
 {
     public function __construct(
         public string $id,
@@ -25,10 +26,6 @@ class SmallGroupDataModel
     
     readonly public string $scheduleFrequencyLabel;
     readonly public string $scheduleDayOfWeekLabel;
-    readonly public ?string $createdById;
-    readonly public ?string $createdBy;
-    readonly public ?string $createdAt;
-    readonly public ?string $updatedAt;
 
     public static function fromSaveEvent(SmallGroupSaveAbstract $event): self
     {

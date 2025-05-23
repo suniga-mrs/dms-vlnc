@@ -24,8 +24,8 @@ class SmallGroupController extends Controller
 
         $validated = $request->validate([
             'id'                    => 'nullable|uuid',
-            'description'           => 'required|string|max:255',
-            'lifeStageId'           => 'nullable|integer',
+            'description'           => 'nullable|string|max:255',
+            'lifeStageId'           => 'required|integer',
             'scheduledDayOfWeek'    => 'required|integer|min:1|max:7',
             'scheduleTimeOfDay'     => 'required|date_format:H:i:s',
             'scheduleFrequency'     => 'required|in:weekly,fortnightly,monthly',

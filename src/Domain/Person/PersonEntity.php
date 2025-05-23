@@ -19,12 +19,26 @@ class PersonEntity extends Model
     protected $fillable = [
         'first_name',
         'last_name',
+        'life_stage_id',
         'gender',
         'birthdate',
     ];
 
     protected $casts = [
-        'gender' => GenderEnum::class,
-        'birthdate' => 'datetime',
-    ];
+        'life_stage_id'     => 'integer',
+        'gender'            =>  GenderEnum::class,
+        'birthdate'         => 'datetime',
+    ];    
+
+    public static function createFromData(PersonDataModel $data): self
+    {
+        return new self([
+            'id'                    => $data->id,
+            'first_name'            => $data->firstName,
+            'last_name'             => $data->lastName,
+            'life_stage_id'         => $data->lifeStageId,
+            'gender'                => $data->gender,
+            'birthdate'             => $data->birthdate,
+        ]);
+    }
 }

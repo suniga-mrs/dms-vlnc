@@ -13,9 +13,13 @@ return new class extends Migration
             $table->uuid('id')->primary();
             $table->string('first_name', 100);
             $table->string('last_name', 100);
-            $table->enum('gender', array_column(GenderEnum::cases(), 'value'));
-            $table->dateTime('birthdate');
+            $table->enum('gender', array_column(GenderEnum::cases(), 'value'))->nullable();
+            $table->unsignedBigInteger('life_stage_id')->nullable();
+            $table->dateTime('birthdate')->nullable();
             $table->timestamps(); // adds created_at and updated_at
+
+            // Foreign key constraint (optional but recommended)
+            $table->foreign('life_stage_id')->references('id')->on('life_stages')->onDelete('set null');
         });
     }
 

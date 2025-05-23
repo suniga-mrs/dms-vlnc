@@ -13,10 +13,11 @@ class PersonController extends Controller
     {  
         $validated = $request->validate([
             'id' => 'nullable|uuid',
-            'first_name' => 'required|string|max:100',
-            'last_name'  => 'required|string|max:100',
-            'gender'     => 'required|in:MALE,FEMALE,NOT SPECIFIED',
-            'birthdate'  => 'required|date',
+            'first_name'    => 'required|string|max:100',
+            'last_name'     => 'required|string|max:100',
+            'gender'        => 'nullable|in:MALE,FEMALE,NOT SPECIFIED',
+            'birthdate'     => 'nullable|date',
+            'life_stage_id' => 'nullable|integer',
         ]);
         $personId = $validated["id"];
         $person = $repo->save($personId, [
