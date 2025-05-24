@@ -3,7 +3,6 @@
 namespace App\Application\EventHandlers;
 
 use App\Domain\Events\SmallGroupCreatedEvent;
-use App\Domain\Events\SmallGroupSaveAbstract;
 use App\Domain\Events\SmallGroupUpdatedEvent;
 use App\Domain\SmallGroup\SmallGroupRepositoryInterface;
 use App\Domain\SmallGroup\SmallGroupDataModel;
@@ -23,16 +22,22 @@ class SmallGroupEventHandler
     {
         $this->unitOfWork->execute(function () use ($event) {            
             match(true) {
-                $event instanceof SmallGroupCreatedEvent => $this->handleSave(null, $event),
-                $event instanceof SmallGroupUpdatedEvent => $this->handleSave($event->getEntityId(), $event),
+                $event instanceof SmallGroupCreatedEvent => $this->handleCreate($event),
+                $event instanceof SmallGroupUpdatedEvent => $this->handleUpdated($event->getEntityId(), $event),
             };    
             $this->eventRepository->store($event);
         });      
     }
 
-    private function handleSave(?string $id, SmallGroupSaveAbstract $event): void
+    private function handleCreate(SmallGroupCreatedEvent $event): void
     {
-           $data = SmallGroupDataModel::fromSaveEvent($event);
-           $this->smallGroupRepository->save($id, $data);
+           $data = SmallGroupDataModel::fromCreateEvent($event);
+           $this->smallGroupRepository->create( $data);
+    }
+
+    private function handleUpdated(?string $id, SmallGroupUpdatedEvent $event): void
+    {
+           $data = SmallGroupDataModel::fromUpdateEvent($event);
+           $this->smallGroupRepository->update($id, $data);
     }
 }

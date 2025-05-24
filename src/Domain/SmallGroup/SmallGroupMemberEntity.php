@@ -3,9 +3,6 @@
 namespace App\Domain\SmallGroup;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Concerns\HasUuids;
-use App\Domain\Enums\ScheduleFrequencyEnum;
-use App\Domain\Enums\DayOfWeekEnum;
 use App\Domain\Enums\SmallGroupMemberStatus;
 use App\Domain\SmallGroup\SmallGroupEntity;
 use App\Domain\Person\PersonEntity;

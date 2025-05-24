@@ -13,15 +13,17 @@ class SmallGroupRepository implements SmallGroupRepositoryInterface
         return SmallGroupEntity::findOrFail($id);
     }
 
-    public function save(?string $id, SmallGroupDataModel $data): SmallGroupEntity
+    public function create(SmallGroupDataModel $data): SmallGroupEntity
     {
-        if (!blank($id)) {
-            $entity = SmallGroupEntity::findOrFail($id);
-            $entity->updateFromData($data);
-            $entity->save();
-            return $entity;
-        }
         $entity = SmallGroupEntity::createFromData($data);
+        $entity->save();
+        return $entity;
+    }
+
+    public function update(?string $id, SmallGroupDataModel $data): SmallGroupEntity
+    {
+        $entity = SmallGroupEntity::findOrFail($id);
+        $entity->updateFromData($data);
         $entity->save();
         return $entity;
     }

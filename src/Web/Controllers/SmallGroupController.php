@@ -4,68 +4,94 @@ namespace App\Web\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Event;
-use Illuminate\Validation\Rule;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use App\Domain\Enums\ScheduleFrequencyEnum;
 use App\Domain\Events\SmallGroupCreatedEvent;
 use App\Domain\Events\SmallGroupUpdatedEvent;
-use App\Domain\Events\SmallGroupSaveAbstract;
 use App\Domain\SmallGroup\SmallGroupDataModel;
 use App\Domain\SmallGroup\SmallGroupRepositoryInterface;
 use App\Web\Helpers\DateTimeHelpers;
+use App\Domain\Person\PersonEntity;
+use App\Domain\Person\PersonRepositoryInterface;
 
 class SmallGroupController extends Controller
 {
-    public function save(Request $request, SmallGroupRepositoryInterface $repo)
+    public function create(
+        Request $request,
+        SmallGroupRepositoryInterface $repo,
+        PersonRepositoryInterface $personRepository)
     {
         $request->merge([
             'scheduleTimeOfDay' =>  DateTimeHelpers::normalizeToTimeOfDay($request->input('scheduleTimeOfDay')),
             'scheduleFrequency' =>  strtolower($request->input('scheduleFrequency'))
         ]);
-
         $validated = $request->validate([
-            'id'                    => 'nullable|uuid',
             'description'           => 'nullable|string|max:255',
             'lifeStageId'           => 'required|integer',
+            'leaderPersonId'        => 'required|string',
             'scheduledDayOfWeek'    => 'required|integer|min:1|max:7',
             'scheduleTimeOfDay'     => 'required|date_format:H:i:s',
             'scheduleFrequency'     => 'required|in:weekly,fortnightly,monthly',
         ]);
-        $groupId = $validated['id'] ?? null;
-        $event = $this->buildSaveEvent($validated, $groupId);
+        
+        $leaderPersonId = $validated['leaderPersonId'];
+        $isLeaderExists = $personRepository->isExists($leaderPersonId);
+        if (!$isLeaderExists) {
+        throw (new ModelNotFoundException)->setModel(PersonEntity::class, $leaderPersonId);
+    }
+        
+        $scheduleFrequency = ScheduleFrequencyEnum::fromLabel($validated['scheduleFrequency']);
+        $event = new SmallGroupCreatedEvent(
+                description:       $validated['description'],
+                lifeStageId:       $validated['lifeStageId'],
+                leaderPersonId:    $leaderPersonId,
+                scheduleDayOfWeek: (int) $validated['scheduledDayOfWeek'],
+                scheduleTimeOfDay: $validated['scheduleTimeOfDay'],
+                scheduleFrequency: $scheduleFrequency,
+                createdById:       null);
 
         // Dispatch the event - the handler will persist event
-        // TODO - create class that consolidates and dispatches these events
+        // TODO: create class that consolidates and dispatches these events
         //        to centralize persistence and do it one time
         Event::dispatch($event);
 
         $group = $repo->get($event->getEntityId());
         $dataModel = SmallGroupDataModel::fromEntity($group);
-        $status = $groupId ? 200 : 201;
+        $status = 201;
         return response()->json($dataModel, $status);        
     }
 
-    private function buildSaveEvent(array $data, ?string $id): SmallGroupSaveAbstract
+    public function update(Request $request, SmallGroupRepositoryInterface $repo)
     {
-        $scheduleFrequency = ScheduleFrequencyEnum::fromLabel($data['scheduleFrequency']);
-
-        return $id
-            ? new SmallGroupUpdatedEvent(
-                id:                $id,
-                description:       $data['description'],
-                lifeStageId:       $data['lifeStageId'] ?? null,
-                scheduleDayOfWeek: (int) $data['scheduledDayOfWeek'],
-                scheduleTimeOfDay: $data['scheduleTimeOfDay'],
+        $request->merge([
+            'scheduleTimeOfDay' =>  DateTimeHelpers::normalizeToTimeOfDay($request->input('scheduleTimeOfDay')),
+            'scheduleFrequency' =>  strtolower($request->input('scheduleFrequency'))
+        ]);
+        $validated = $request->validate([
+            'id'                    => 'required|uuid',
+            'description'           => 'nullable|string|max:255',
+            'scheduledDayOfWeek'    => 'required|integer|min:1|max:7',
+            'scheduleTimeOfDay'     => 'required|date_format:H:i:s',
+            'scheduleFrequency'     => 'required|in:weekly,fortnightly,monthly',
+        ]);
+        $scheduleFrequency = ScheduleFrequencyEnum::fromLabel($validated['scheduleFrequency']);
+        $event = new SmallGroupUpdatedEvent(
+                id:                $validated['id'],
+                description:       $validated['description'],
+                scheduleDayOfWeek: (int) $validated['scheduledDayOfWeek'],
+                scheduleTimeOfDay: $validated['scheduleTimeOfDay'],
                 scheduleFrequency: $scheduleFrequency,
-                createdById:       null
-            )
-            : new SmallGroupCreatedEvent(
-                description:       $data['description'],
-                lifeStageId:       $data['lifeStageId'] ?? null,
-                scheduleDayOfWeek: (int) $data['scheduledDayOfWeek'],
-                scheduleTimeOfDay: $data['scheduleTimeOfDay'],
-                scheduleFrequency: $scheduleFrequency,
-                createdById:       null
+                updatedById:       null
             );
-    }
-    
+
+        // Dispatch the event - the handler will persist event
+        // TODO: create class that consolidates and dispatches these events
+        //        to centralize persistence and do it one time
+        Event::dispatch($event);
+
+        $group = $repo->get($event->getEntityId());
+        $dataModel = SmallGroupDataModel::fromEntity($group);
+        $status = 200;
+        return response()->json($dataModel, $status);        
+    }    
 }

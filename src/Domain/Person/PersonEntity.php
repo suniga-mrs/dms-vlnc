@@ -41,4 +41,15 @@ class PersonEntity extends Model
             'birthdate'             => $data->birthdate,
         ]);
     }
+
+     public static function updateFromData(PersonDataModel $data): self
+    {
+        return new self([
+            'first_name'            => $data->firstName,
+            'last_name'             => $data->lastName,
+            'life_stage_id'         => $data->lifeStageId,
+            'gender'                => $data->gender,
+            'birthdate'             => $data->birthdate,
+        ]);
+    }
 }

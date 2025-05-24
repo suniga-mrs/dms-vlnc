@@ -4,6 +4,7 @@ namespace App\Domain\Person;
 
 use App\Domain\Enums\GenderEnum;
 use App\Domain\Shared\BaseDataModel;
+use \DateTimeImmutable;
 
 class PersonDataModel extends BaseDataModel
 {
@@ -11,9 +12,9 @@ class PersonDataModel extends BaseDataModel
         public ?string $id,
         public string $firstName,
         public string $lastName,
-        public int $lifeStageId,
         public GenderEnum $gender,
-        public \DateTimeImmutable $birthdate,
+        public ?int $lifeStageId,
+        public ?DateTimeImmutable $birthdate,
     ) {
         $this->genderLabel = $gender->value;
     }

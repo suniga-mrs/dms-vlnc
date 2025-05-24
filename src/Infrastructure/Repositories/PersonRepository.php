@@ -8,14 +8,22 @@ use App\Domain\Person\PersonRepositoryInterface;
 
 class PersonRepository implements PersonRepositoryInterface
 {
+    public function isExists(string $personId): bool
+    {
+        return PersonEntity::whereKey($personId)->exists();
+    }
+
     public function save(?string $id, PersonDataModel $data): PersonEntity
     {
         if (!is_null($id) || !blank($id)) {
             $entity = PersonEntity::findOrFail($id);
-            $entity->update($data);
+            $entity->updateFromData($data);
+            $entity->save();
             return $entity;
         }
-        return PersonEntity::create($data);
+        $entity = PersonEntity::createFromData($data);
+        $entity->save();
+        return $entity;
     }
 
     public function delete(string $id): bool

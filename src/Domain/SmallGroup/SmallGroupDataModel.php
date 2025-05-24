@@ -4,18 +4,23 @@ namespace App\Domain\SmallGroup;
 
 use App\Domain\Enums\DayOfWeekEnum;
 use App\Domain\Enums\ScheduleFrequencyEnum;
-use App\Domain\Events\SmallGroupSaveAbstract;
+use App\Domain\Events\SmallGroupCreatedEvent;
+use App\Domain\Events\SmallGroupUpdatedEvent;
 use App\Domain\SmallGroup\SmallGroupEntity;
 use App\Domain\Shared\BaseDataModel;
 use \DateTimeImmutable;
 use \DateTimeInterface;
-
+/**
+ * Data transfer object for various small group operations.
+ * Nullability of values here does not reflect the SmallGroupEntity properties' nullability
+ */
 class SmallGroupDataModel extends BaseDataModel
 {
     public function __construct(
         public string $id,
         public string $description,
-        public int $lifeStageId,
+        public ?int $lifeStageId,
+        public ?string $leaderPersonId,
         public DayOfWeekEnum $scheduleDayOfWeek,
         public DateTimeInterface $scheduleTimeOfDay,
         public ScheduleFrequencyEnum $scheduleFrequency
@@ -27,12 +32,26 @@ class SmallGroupDataModel extends BaseDataModel
     readonly public string $scheduleFrequencyLabel;
     readonly public string $scheduleDayOfWeekLabel;
 
-    public static function fromSaveEvent(SmallGroupSaveAbstract $event): self
+    public static function fromCreateEvent(SmallGroupCreatedEvent $event): self
     {
         return new self(
             $event->getEntityId(),
             $event->description,
             $event->lifeStageId,
+            $event->leaderPersonId,
+            DayOfWeekEnum::from($event->scheduleDayOfWeek),
+            new DateTimeImmutable($event->scheduleTimeOfDay),
+            $event->scheduleFrequency
+        );
+    }
+
+    public static function fromUpdateEvent(SmallGroupUpdatedEvent $event): self
+    {
+        return new self(
+            $event->getEntityId(),
+            $event->description,
+            $event->lifeStageId ?? null,
+            $event->leaderPersonId ?? null,
             DayOfWeekEnum::from($event->scheduleDayOfWeek),
             new DateTimeImmutable($event->scheduleTimeOfDay),
             $event->scheduleFrequency
@@ -45,6 +64,7 @@ class SmallGroupDataModel extends BaseDataModel
             $entity->id,
             $entity->description,
             $entity->life_stage_id,
+            $entity->leader_person_id,
             $entity->schedule_day_of_week,
             $entity->schedule_time_of_day,
             $entity->schedule_frequency
