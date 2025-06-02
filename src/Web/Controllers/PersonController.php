@@ -14,7 +14,7 @@ class PersonController extends Controller
     public function save(Request $request, PersonRepositoryInterface $repo)
     {
         $validated = $request->validate([
-            'id' => 'nullable|uuid',
+            'id'            => 'nullable|uuid',
             'firstName'     => 'required|string|max:100',
             'lastName'      => 'required|string|max:100',
             'gender'        => 'nullable|string',
@@ -22,18 +22,19 @@ class PersonController extends Controller
             'lifeStageId'   => 'nullable|integer',
         ]);
         $personId = $validated["id"] ?? null;
-        $gender = $validated["gender"] ?? GenderEnum::Unspecified->label();
-        $genderEnum = GenderEnum::fromLabel($gender) ?? GenderEnum::Unspecified;
+        $gender = !is_null($validated["gender"]) 
+            ? GenderEnum::fromString($validated["gender"])
+            : GenderEnum::Unspecified;
         $data = new PersonDataModel(
             null,
             $validated['firstName'],
             $validated['lastName'],
-            $genderEnum,
+            $gender,
             $validated['lifeStageId'],
             DateTimeHelpers::toDateImmutable($validated['birthdate']),
         );
         $personEntity = $repo->save($personId, $data);
         $status = $personId ? 200 : 201;
-        return response()->json($personEntity, $status);
+        return response()->json(PersonDataModel::fromEntity($personEntity), $status);
     }
 }

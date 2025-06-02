@@ -42,7 +42,7 @@ class PersonEntity extends Model
         ]);
     }
 
-     public static function updateFromData(PersonDataModel $data): self
+    public static function updateFromData(PersonDataModel $data): self
     {
         return new self([
             'first_name'            => $data->firstName,

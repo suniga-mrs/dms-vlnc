@@ -4,24 +4,15 @@ namespace App\Domain\Enums;
 
 enum GenderEnum: string
 {
-    case Male = 'male';
-    case Female = 'female';
-    case Unspecified = 'unspecified';
+    case Male = 'Male';
+    case Female = 'Female';
+    case Unspecified = 'Unspecified';
 
-    public function label(): string
-    {
-        return match($this) {
-            self::Male => 'Male',
-            self::Female => 'Female',
-            self::Unspecified => 'Unspecified',
-        };
-    }
-
-    public static function fromLabel(string $label): ?self
+    public static function fromString(string $label): ?self
     {
         $normalized = strtolower($label);
         foreach (self::cases() as $case) {
-            if (strtolower($case->label()) === $normalized) {
+            if (strtolower($case->name) === $normalized) {
                 return $case;
             }
         }
