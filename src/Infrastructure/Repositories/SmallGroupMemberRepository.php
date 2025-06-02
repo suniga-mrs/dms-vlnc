@@ -33,4 +33,12 @@ class SmallGroupMemberRepository implements SmallGroupMemberRepositoryInterface
         $entity->save();
         return $entity;
     }
+
+    public function updateInternStatus(string $smallGroupMemberId): SmallGroupMemberEntity
+    {
+        $smallGroupMemberEntity = SmallGroupMemberEntity::findOrFail($smallGroupMemberId);
+        $smallGroupMemberEntity->intern == !$smallGroupMemberEntity->intern;
+        $smallGroupMemberEntity->save();
+        return $smallGroupMemberEntity;
+    }
 }

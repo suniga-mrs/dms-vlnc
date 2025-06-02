@@ -15,6 +15,8 @@ use App\Domain\Helpers\DateTimeHelpers;
 use App\Domain\Helpers\PersonHelper;
 use App\Domain\Person\PersonEntity;
 use App\Domain\Person\PersonRepositoryInterface;
+use App\Domain\SmallGroup\SmallGroupMemberEntity;
+use App\Domain\SmallGroup\SmallGroupMemberRepositoryInterface;
 
 class SmallGroupController extends Controller
 {
@@ -123,5 +125,15 @@ class SmallGroupController extends Controller
             $member = $service->createSmallGroupMemberAndPerson($smallGroupId, $person);
             return response()->json($member, 201);
         }
+    }
+
+    public function updateInternStatus(Request $request, SmallGroupMemberRepositoryInterface $repository)
+    {
+        $validated = $request->validate([
+            'smallGroupMemberId'      => 'required|uuid',
+        ]);
+        $smallGroupMemberId = $validated['smallGroupMemberId'] ?? null;
+        $entity = $repository->updateInternStatus(($smallGroupMemberId));
+        return response()->json($entity, 200);
     }
 }
