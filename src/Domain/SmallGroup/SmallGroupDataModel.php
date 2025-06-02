@@ -8,6 +8,7 @@ use App\Domain\Events\SmallGroupCreatedEvent;
 use App\Domain\Events\SmallGroupUpdatedEvent;
 use App\Domain\SmallGroup\SmallGroupEntity;
 use App\Domain\Shared\BaseDataModel;
+use App\Domain\Helpers\DateTimeHelpers;
 use \DateTimeImmutable;
 use \DateTimeInterface;
 /**
@@ -69,10 +70,12 @@ class SmallGroupDataModel extends BaseDataModel
             $entity->schedule_time_of_day,
             $entity->schedule_frequency
         );
-
-        $self->createdAt = $entity->created_at;
-        $self->updatedAt = $entity->updated_at;
-        
+        $self->setBaseProperties(
+            DateTimeHelpers::toDateImmutable($entity->created_at),
+            DateTimeHelpers::toDateImmutable($entity->updated_at),
+            null,
+            null,
+        );        
         return $self;
     }
 }

@@ -19,7 +19,7 @@ return new class extends Migration
             $table->timestamps(); // adds created_at and updated_at
 
             // Foreign key constraint (optional but recommended)
-            $table->foreign('life_stage_id')->references('id')->on('life_stages')->onDelete('set null');
+            $table->foreign('life_stage_id')->references('id')->on('life_stages')->restrictOnDelete();
         });
     }
 

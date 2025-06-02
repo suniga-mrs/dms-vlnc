@@ -16,6 +16,7 @@ class SmallGroupMemberEntity extends Model
     protected $keyType = 'string';
 
     protected $fillable = [
+        'id',
         'small_group_id',
         'person_id',
         'intern',
@@ -38,5 +39,19 @@ class SmallGroupMemberEntity extends Model
     public function person()
     {
         return $this->belongsTo(PersonEntity::class);
+    }
+
+    public static function createNew(
+        string $memberId,
+        string $smallGroupId,
+        string $personId): self
+    {
+        return new self([
+            'id'                    => $memberId,
+            'small_group_id'        => $smallGroupId,
+            'person_id'             => $personId,
+            'intern'                => false,
+            'status'                => SmallGroupMemberStatus::New,
+        ]);
     }
 }

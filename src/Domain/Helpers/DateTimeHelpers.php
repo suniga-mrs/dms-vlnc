@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Web\Helpers;
+namespace App\Domain\Helpers;
 
 use Carbon\Carbon;
 use \DateTimeImmutable;

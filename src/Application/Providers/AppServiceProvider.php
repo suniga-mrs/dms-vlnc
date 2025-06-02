@@ -11,7 +11,11 @@ use App\Infrastructure\Repositories\LifeStageRepository;
 use App\Infrastructure\Repositories\SmallGroupRepository;
 use App\Domain\Shared\DomainEventRepositoryInterface;
 use App\Domain\Shared\UnitOfWorkInterface;
+use App\Domain\SmallGroup\SmallGroupMemberRepositoryInterface;
+use App\Application\Services\SmallGroupServiceInterface;
+use App\Application\Services\SmallGroupService;
 use App\Infrastructure\Repositories\DomainEventRepository;
+use App\Infrastructure\Repositories\SmallGroupMemberRepository;
 use App\Infrastructure\Shared\DatabaseUnitOfWork;
 
 class AppServiceProvider extends ServiceProvider
@@ -29,6 +33,8 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(PersonRepositoryInterface::class, PersonRepository::class);
         $this->app->bind(LifeStageRepositoryInterface::class, LifeStageRepository::class);
         $this->app->bind(SmallGroupRepositoryInterface::class, SmallGroupRepository::class);
+        $this->app->bind(SmallGroupMemberRepositoryInterface::class, SmallGroupMemberRepository::class);
+        $this->app->bind(SmallGroupServiceInterface::class, SmallGroupService::class);
 
         $this->loadMigrationsFrom(database_path('domain_migrations'));
     }

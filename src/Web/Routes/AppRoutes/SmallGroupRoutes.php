@@ -6,4 +6,6 @@ use App\Web\Controllers\SmallGroupController;
 Route::prefix('small-group')->group(function () {
     Route::post('/', [SmallGroupController::class, 'create']);
     Route::patch('/', [SmallGroupController::class, 'update']);
+
+     Route::post('/add-member', [SmallGroupController::class, 'addMember']);
 });

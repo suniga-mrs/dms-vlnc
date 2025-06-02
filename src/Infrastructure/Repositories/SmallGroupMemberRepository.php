@@ -2,26 +2,34 @@
 
 namespace App\Infrastructure\Repositories;
 
+use Illuminate\Validation\ValidationException;
 use App\Domain\SmallGroup\SmallGroupMemberEntity;
-use App\Domain\SmallGroup\SmallGroupRepositoryInterface;
-use App\Domain\SmallGroup\SmallGroupDataModel;
+use App\Domain\SmallGroup\SmallGroupMemberRepositoryInterface;
 
-class SmallGroupMemberRepository
+class SmallGroupMemberRepository implements SmallGroupMemberRepositoryInterface
 {
     public function get(string $id): SmallGroupMemberEntity
     {
         return SmallGroupMemberEntity::findOrFail($id);
     }
 
-    public function save(?string $id, SmallGroupDataModel $data): SmallGroupMemberEntity
+    public function createNewMember(
+        string $id,
+        string $smallGroupId,
+        string $personId): SmallGroupMemberEntity
     {
-        if (!blank($id)) {
-            $entity = SmallGroupMemberEntity::findOrFail($id);
-            $entity->updateFromData($data);
-            $entity->save();
-            return $entity;
+        // Check if the member already exists
+        $existingMember = SmallGroupMemberEntity::where('small_group_id', $smallGroupId)
+            ->where('person_id', $personId)
+            ->first();
+
+        if ($existingMember) {
+            throw ValidationException::withMessages([
+                'member' => ['This person is already a member of the small group.']
+            ]);
         }
-        $entity = SmallGroupMemberEntity::createFromData($data);
+
+        $entity = SmallGroupMemberEntity::createNew($id, $smallGroupId, $personId);
         $entity->save();
         return $entity;
     }
