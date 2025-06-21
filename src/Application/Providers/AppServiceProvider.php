@@ -38,12 +38,6 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(SmallGroupMemberRepositoryInterface::class, SmallGroupMemberRepository::class);
         $this->app->bind(SmallGroupServiceInterface::class, SmallGroupService::class);
 
-        // Factories
-        $this->app->bind(
-            QueryEntityServiceFactoryInterface::class,
-            QueryEntityServiceFactory::class
-        );
-
         $this->loadMigrationsFrom(database_path('domain_migrations'));
     }
 

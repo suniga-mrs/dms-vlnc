@@ -32,6 +32,8 @@ class SmallGroupDataModel extends BaseDataModel
     
     readonly public string $scheduleFrequencyLabel;
     readonly public string $scheduleDayOfWeekLabel;
+    public string $lifeStageName;
+    public string $leaderPersonName;
 
     public static function fromCreateEvent(SmallGroupCreatedEvent $event): self
     {
