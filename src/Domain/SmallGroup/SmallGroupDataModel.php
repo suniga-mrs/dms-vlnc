@@ -4,6 +4,7 @@ namespace App\Domain\SmallGroup;
 
 use App\Domain\Enums\DayOfWeekEnum;
 use App\Domain\Enums\ScheduleFrequencyEnum;
+use App\Domain\Enums\SmallGroupCategory;
 use App\Domain\Events\SmallGroupCreatedEvent;
 use App\Domain\Events\SmallGroupUpdatedEvent;
 use App\Domain\SmallGroup\SmallGroupEntity;
@@ -24,14 +25,17 @@ class SmallGroupDataModel extends BaseDataModel
         public ?string $leaderPersonId,
         public DayOfWeekEnum $scheduleDayOfWeek,
         public DateTimeInterface $scheduleTimeOfDay,
-        public ScheduleFrequencyEnum $scheduleFrequency
+        public ScheduleFrequencyEnum $scheduleFrequency,
+        public SmallGroupCategory $category,
     ) {
-        $this->scheduleFrequencyLabel = $scheduleFrequency->label();
-        $this->scheduleDayOfWeekLabel = $scheduleDayOfWeek->label();
+        $this->scheduleFrequencyLabel   = $scheduleFrequency->label();
+        $this->scheduleDayOfWeekLabel   = $scheduleDayOfWeek->label();
+        $this->categoryName             = $category->label();
     }
     
     readonly public string $scheduleFrequencyLabel;
     readonly public string $scheduleDayOfWeekLabel;
+    readonly public string $categoryName;
     public string $lifeStageName;
     public string $leaderPersonName;
 
@@ -70,7 +74,8 @@ class SmallGroupDataModel extends BaseDataModel
             $entity->leader_person_id,
             $entity->schedule_day_of_week,
             $entity->schedule_time_of_day,
-            $entity->schedule_frequency
+            $entity->schedule_frequency,
+            $entity->category,
         );
         $self->setBaseProperties(
             DateTimeHelpers::toDateImmutable($entity->created_at),

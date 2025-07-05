@@ -23,6 +23,7 @@ class SmallGroupEntity extends Model
         'schedule_day_of_week',
         'schedule_time_of_day',
         'schedule_frequency',
+        'category',
     ];
 
     protected $casts = [
@@ -32,6 +33,7 @@ class SmallGroupEntity extends Model
         'schedule_day_of_week'  => DayOfWeekEnum::class,
         'schedule_time_of_day'  => 'datetime:H:i:s',
         'schedule_frequency'    => ScheduleFrequencyEnum::class,
+        'category'              => SmallGroupCategory::class
     ];
 
     public static function createFromData(SmallGroupDataModel $data): self
@@ -44,6 +46,7 @@ class SmallGroupEntity extends Model
             'schedule_day_of_week'  => $data->scheduleDayOfWeek,
             'schedule_time_of_day'  => $data->scheduleTimeOfDay,
             'schedule_frequency'    => $data->scheduleFrequency,
+            'category'              => $data->category,
         ]);
     }
 

@@ -70,6 +70,7 @@ class SmallGroupRepository implements SmallGroupRepositoryInterface
                 scheduleDayOfWeek: $row->schedule_day_of_week,
                 scheduleTimeOfDay: $row->schedule_time_of_day,
                 scheduleFrequency: $row->schedule_frequency,
+                category: $row->category,
             );
             $data->lifeStageName = $row->life_stage_name ?? null;
             $data->leaderPersonName = $row->leader_name ?? null;

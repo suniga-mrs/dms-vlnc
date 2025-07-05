@@ -22,29 +22,11 @@ use App\Domain\SmallGroup\SmallGroupQueryModel;
 
 class SmallGroupController extends Controller
 {
-    public function getList(Request $request, SmallGroupRepositoryInterface $repo)
+    public function getSmallGroupList(Request $request, SmallGroupRepositoryInterface $repo)
     {
-        $validated = $request->validate([
-            'lifeStageIds'    => 'nullable|array',
-            'lifeStageIds.*'  => 'integer',
-            'leaderPersonId'  => 'nullable|uuid',
-            'scheduleDays'    => 'nullable|array',
-            'scheduleDays.*'  => 'integer|between:1,7',
-            'page'          => 'sometimes|integer|min:1',
-            'perPage'       => 'sometimes|integer|min:1|max:100',
-        ]);
-        $queryModel = new SmallGroupQueryModel(
-            lifeStageIds: $validated['lifeStageIds'] ?? [],
-            leaderPersonId: $validated['leaderPersonId'] ?? null,
-            scheduleDays: !empty($validated['scheduleDays'])
-                ? array_map(fn($v) => DayOfWeekEnum::from($v), $validated['scheduleDays'])
-                : []
-        );
-        $page = $validated['page'] ?? 1;
-        $perPage = $validated['perPage'] ?? 15;
-        $results = $repo->getList($queryModel, $page, $perPage);
-        return response()->json($results, 200);
-    }
+        return $this->getListByCategory(
+            $request, $repo, SmallGroupCategory::SmallGroup
+        )
 
     public function create(
         Request $request,
@@ -161,5 +143,33 @@ class SmallGroupController extends Controller
         $smallGroupMemberId = $validated['smallGroupMemberId'] ?? null;
         $entity = $repository->updateInternStatus(($smallGroupMemberId));
         return response()->json($entity, 200);
+    }
+
+    private function getListByCategory(
+        Request $request,
+        SmallGroupRepositoryInterface $repo,
+        SmallGroupCategory $category)
+    {
+        $validated = $request->validate([
+            'lifeStageIds'    => 'nullable|array',
+            'lifeStageIds.*'  => 'integer',
+            'leaderPersonId'  => 'nullable|uuid',
+            'scheduleDays'    => 'nullable|array',
+            'scheduleDays.*'  => 'integer|between:1,7',
+            'page'          => 'sometimes|integer|min:1',
+            'perPage'       => 'sometimes|integer|min:1|max:100',
+        ]);
+        $queryModel = new SmallGroupQueryModel(
+            lifeStageIds: $validated['lifeStageIds'] ?? [],
+            leaderPersonId: $validated['leaderPersonId'] ?? null,
+            scheduleDays: !empty($validated['scheduleDays'])
+                ? array_map(fn($v) => DayOfWeekEnum::from($v), $validated['scheduleDays'])
+                : [],
+            category: $category,
+        );
+        $page = $validated['page'] ?? 1;
+        $perPage = $validated['perPage'] ?? 15;
+        $results = $repo->getList($queryModel, $page, $perPage);
+        return response()->json($results, 200);
     }
 }
